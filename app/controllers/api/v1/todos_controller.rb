@@ -37,15 +37,16 @@ class Api::V1::TodosController < ApplicationController
     end
 
     def todo_params
-      params.require(:todo).permit(:title, :completed)
+      params.require(:todo).permit(:title, :status)
     end
 
     def authorize_request
         header = request.headers['Authorization']
         token = header.split(' ').last if header
         begin
-          decoded = JWT.decode(token, Rails.application.secrets.secret_key_base)[0]
+          decoded = JWT.decode(token, Rails.application.secret_key_base)[0]
           @current_user = User.find(decoded['user_id'])
+          
         rescue
           render json: { errors: 'Unauthorized' }, status: :unauthorized
         end

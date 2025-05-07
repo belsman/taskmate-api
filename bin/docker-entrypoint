@@ -2,13 +2,24 @@
 
 # Enable jemalloc for reduced memory usage and latency.
 if [ -z "${LD_PRELOAD+x}" ]; then
-    LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
-    export LD_PRELOAD
+  LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
+  export LD_PRELOAD
 fi
 
-# If running the rails server then create or migrate existing database
+# Echo command for visibility
+echo "📦 Executing: $@"
+
+# Handle normal Rails server (prepare DB)
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  echo "🛠 Preparing database..."
   ./bin/rails db:prepare
 fi
 
-exec "${@}"
+# Handle custom jobs (e.g., Cloud Run Job like bash -c "rails db:migrate && rails db:seed")
+if [[ "$*" == *"db:migrate"* ]] || [[ "$*" == *"db:seed"* ]] || [[ "$*" == *"db:prepare"* ]]; then
+  echo "⚙️  Preparing or seeding database..."
+fi
+
+# Finally, execute passed command
+exec "$@"
+

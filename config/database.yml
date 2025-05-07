@@ -19,7 +19,6 @@ default: &default
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-
 development:
   <<: *default
   database: taskmate_api_development
@@ -81,9 +80,11 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: taskmate_api_production
+    database: taskmate
     username: taskmate_api
     password: <%= ENV["TASKMATE_API_DATABASE_PASSWORD"] %>
+    host: /cloudsql/taskmate-workspace:us-central1:taskmate-db
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   cache:
     <<: *primary_production
     database: taskmate_api_production_cache

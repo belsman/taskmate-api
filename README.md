@@ -104,6 +104,4 @@ Authorization: Bearer your.jwt.token.here
 
 ## ⚠️ Challenges Faced
 
-- Debugging `401 Unauthorized` due to token issues.
-- Managing secure JWT secret access.
 - Ensuring mobile devices can reach the Rails server locally.

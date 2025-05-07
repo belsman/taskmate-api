@@ -37,7 +37,8 @@ class Api::V1::TodosController < ApplicationController
     end
 
     def todo_params
-      params.require(:todo).permit(:title, :status)
+      puts "todo_params", params
+      params.require(:todo).permit(:title, :status, :description)
     end
 
     def authorize_request
